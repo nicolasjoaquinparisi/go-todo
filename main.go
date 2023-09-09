@@ -24,6 +24,7 @@ func main() {
 
 	router := gin.Default()
 	routes.SetupAuthRoutes(router)
+	routes.SetupUsersRoutes(router)
 
 	if err := router.Run(address); err != nil {
 		return
