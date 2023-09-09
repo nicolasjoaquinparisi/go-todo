@@ -1,0 +1,40 @@
+# Ignorar archivos y directorios generados por Go
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.prof
+*.out
+/_test/
+/vendor/
+/Godeps/
+/_obj/
+/_testmain.go
+*.tar.gz
+
+# Ignorar archivos binarios y de generación de IDE
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-workspace
+
+# Ignorar archivos de respaldo
+*~
+
+# Ignorar archivos de registro y salida
+*.log
+*.log.*
+*.stackdump
+
+# Ignorar archivos de configuración de editor
+*.swp
+.DS_Store
+
+# Ignorar archivos de configuración específicos de sistema operativo
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Ignorar variables de entorno
+.env
