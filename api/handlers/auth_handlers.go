@@ -4,8 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
-	"go-todo/api/models"
-	"go-todo/database"
+	users_repository "go-todo/api/repositories"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
@@ -18,8 +17,10 @@ var hash []byte
 
 func SignUp(c *gin.Context) {
 	var body struct {
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=6"`
+		Email     string `json:"email" validate:"required,email"`
+		Password  string `json:"password" validate:"required,min=6"`
+		FirstName string `json:"first_name" validate:"required"`
+		LastName  string `json:"last_name" validate:"required"`
 	}
 
 	// map request body into body struct
@@ -36,9 +37,8 @@ func SignUp(c *gin.Context) {
 	}
 
 	// validate duplicates
-	var existUser models.User
-	database.DB.First(&existUser, "email = ?", body.Email)
-	if existUser.ID != 0 {
+	existUser, _ := users_repository.FindByEmail(body.Email)
+	if existUser != nil {
 		c.JSON(http.StatusConflict, gin.H{"description": "Email already in use"})
 		return
 	}
@@ -47,13 +47,11 @@ func SignUp(c *gin.Context) {
 	hash, err = bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"description": "Internal server error"})
-		return
 	}
 
 	// create user
-	user := models.User{Email: body.Email, Password: string(hash)}
-	result := database.DB.Create(&user)
-	if result.Error != nil {
+	_, err = users_repository.Create(body.Email, string(hash), body.FirstName, body.LastName)
+	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"description": "Failed to create user"})
 		return
 	}
@@ -83,8 +81,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	// find user
-	var user models.User
-	database.DB.First(&user, "email = ?", body.Email)
+	user, _ := users_repository.FindByEmail(body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"description": "Invalid credentials"})
 		return
