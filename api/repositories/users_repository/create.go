@@ -17,20 +17,3 @@ func Create(email string, password string, firstName string, lastName string) (*
 
 	return &user, nil
 }
-
-func FindByEmail(email string) (*models.User, error) {
-	var user *models.User
-
-	result := database.DB.First(&user, "email = ?", email)
-
-	// return query error
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	if user == nil {
-		return nil, errors.New("user not found")
-	}
-
-	return user, nil
-}
