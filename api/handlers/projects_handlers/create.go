@@ -13,12 +13,11 @@ func Create(c *gin.Context) {
 		Name        string `json:"name" validate:"required"`
 		Description string `json:"description"`
 	}
+	var validate *validator.Validate
+	var err error
 
 	user, _ := c.Get("user")
 	userId := user.(models.User).ID
-
-	var validate *validator.Validate
-	var err error
 
 	// map request body into body struct
 	if c.ShouldBindJSON(&body) != nil {

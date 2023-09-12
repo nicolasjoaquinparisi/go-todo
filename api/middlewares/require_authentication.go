@@ -47,7 +47,7 @@ func RequireAuthentication(c *gin.Context) {
 
 		// find user with token sub
 		var user models.User
-		database.DB.First(&user, claims["sub"])
+		database.Instance.First(&user, claims["sub"])
 
 		if user.ID == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"description": "User not found"})

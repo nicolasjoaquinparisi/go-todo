@@ -4,21 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go-todo/api/repositories/users_repository"
+	"go-todo/api/utils/requests/auth_requests"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
 func SignUp(c *gin.Context) {
-	var body struct {
-		Email     string `json:"email" validate:"required,email"`
-		Password  string `json:"password" validate:"required,min=6"`
-		FirstName string `json:"first_name" validate:"required"`
-		LastName  string `json:"last_name" validate:"required"`
-	}
-
-	var validate *validator.Validate
-	var err error
-	var hash []byte
+	var body auth_requests.SignUpBodyStruct
 
 	// map request body into body struct
 	if c.ShouldBindJSON(&body) != nil {
@@ -27,8 +19,9 @@ func SignUp(c *gin.Context) {
 	}
 
 	// validate body
-	validate = validator.New()
-	if err = validate.Struct(body); err != nil {
+	validate := validator.New()
+	err := validate.Struct(body)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -41,6 +34,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// hash password
+	var hash []byte
 	hash, err = bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"description": "Internal server error"})

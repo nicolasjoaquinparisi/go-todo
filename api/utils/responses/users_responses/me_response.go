@@ -1,4 +1,4 @@
-package responses
+package users_responses
 
 type MeHandlerResponse struct {
 	Email     string `json:"email"`

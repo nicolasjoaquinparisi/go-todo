@@ -8,7 +8,7 @@ import (
 func FindAllByUserId(userId uint) ([]*models.Project, error) {
 	var projects []*models.Project
 
-	result := database.DB.Find(&projects, "user_id = ?", userId)
+	result := database.Instance.Find(&projects, "user_id = ?", userId)
 
 	if result.Error != nil {
 		return nil, result.Error

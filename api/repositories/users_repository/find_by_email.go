@@ -8,7 +8,7 @@ import (
 func FindByEmail(email string) (*models.User, error) {
 	var user *models.User
 
-	result := database.DB.First(&user, "email = ?", email)
+	result := database.Instance.First(&user, "email = ?", email)
 
 	// return query error
 	if result.Error != nil {

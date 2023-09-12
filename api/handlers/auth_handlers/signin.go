@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"go-todo/api/repositories/users_repository"
+	"go-todo/api/utils/requests/auth_requests"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
@@ -12,14 +13,7 @@ import (
 )
 
 func SignIn(c *gin.Context) {
-	// get request body
-	var body struct {
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=6"`
-	}
-
-	var validate *validator.Validate
-	var err error
+	var body auth_requests.SignInBodyStruct
 
 	// map request body into body struct
 	if c.ShouldBindJSON(&body) != nil {
@@ -28,8 +22,9 @@ func SignIn(c *gin.Context) {
 	}
 
 	// validate body
-	validate = validator.New()
-	if err = validate.Struct(body); err != nil {
+	validate := validator.New()
+	err := validate.Struct(body)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -55,7 +50,8 @@ func SignIn(c *gin.Context) {
 	})
 
 	// sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	var tokenString string
+	tokenString, err = token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"description": "Internal server error"})
 		return

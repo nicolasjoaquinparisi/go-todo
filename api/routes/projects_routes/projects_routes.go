@@ -13,6 +13,6 @@ func SetupProjectsRoutes(router *gin.Engine) {
 		authGroup.GET("/", middlewares.RequireAuthentication, projects_handlers.FindAllByUserId)
 		authGroup.GET("/:id", middlewares.RequireAuthentication, projects_handlers.FindById)
 		authGroup.PUT("/:id", middlewares.RequireAuthentication, projects_handlers.Update)
-		authGroup.DELETE("/:id", middlewares.RequireAuthentication, projects_handlers.Delete)
+		authGroup.DELETE("/:id", middlewares.RequireAuthentication, projects_handlers.HardDelete)
 	}
 }
