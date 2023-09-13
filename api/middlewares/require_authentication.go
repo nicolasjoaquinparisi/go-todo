@@ -49,12 +49,6 @@ func RequireAuthentication(c *gin.Context) {
 		var user models.User
 		database.Instance.First(&user, claims["sub"])
 
-		if user.ID == 0 {
-			c.JSON(http.StatusNotFound, gin.H{"description": "User not found"})
-			c.Abort()
-			return
-		}
-
 		// attach user to request
 		c.Set("user", user)
 

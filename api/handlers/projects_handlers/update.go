@@ -2,11 +2,11 @@ package projects_handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"go-todo/api/models"
 	"go-todo/api/repositories/projects_repository"
 	"go-todo/api/utils/requests/projects_requests"
 	"net/http"
-	"strconv"
 )
 
 func Update(c *gin.Context) {
@@ -17,7 +17,7 @@ func Update(c *gin.Context) {
 	userId := user.(models.User).ID
 
 	// get project id from request param and parse
-	projectId, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	projectId, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"description": "Internal server error"})
 		return
@@ -30,7 +30,7 @@ func Update(c *gin.Context) {
 	}
 
 	// check if the project exists
-	project, err := projects_repository.FindById(uint(projectId))
+	project, err := projects_repository.FindById(projectId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"description": "Project not found"})
 		return

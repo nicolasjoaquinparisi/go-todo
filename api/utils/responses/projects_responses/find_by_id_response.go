@@ -1,9 +1,12 @@
 package projects_responses
 
-import "go-todo/api/models"
+import (
+	"github.com/google/uuid"
+	"go-todo/api/models"
+)
 
 type FindByIdResponse struct {
-	ID          uint          `json:"id"`
+	ID          uuid.UUID     `json:"id"`
 	Name        string        `json:"name"`
 	Description string        `json:"description"`
 	Tasks       []models.Task `json:"tasks"`

@@ -1,8 +1,6 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "github.com/google/uuid"
 
 type TaskStatus string
 
@@ -13,10 +11,10 @@ const (
 )
 
 type Task struct {
-	gorm.Model
+	BaseModel
 	Name        string     `gorm:"column:name"`
 	Status      TaskStatus `gorm:"type:enum_task_status;default:'ToDo';column:status"`
 	Description string     `gorm:"column:description"`
-	ProjectID   uint       `gorm:"column:project_id"`
+	ProjectID   uuid.UUID  `gorm:"column:project_id"`
 	Project     Project    `gorm:"foreignKey:ProjectID"`
 }

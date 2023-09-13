@@ -7,12 +7,12 @@ import (
 )
 
 func SetupProjectsRoutes(router *gin.Engine) {
-	authGroup := router.Group("/api/projects")
+	projectsGroup := router.Group("/api/projects")
 	{
-		authGroup.POST("/", middlewares.RequireAuthentication, projects_handlers.Create)
-		authGroup.GET("/", middlewares.RequireAuthentication, projects_handlers.FindAllByUserId)
-		authGroup.GET("/:id", middlewares.RequireAuthentication, projects_handlers.FindById)
-		authGroup.PUT("/:id", middlewares.RequireAuthentication, projects_handlers.Update)
-		authGroup.DELETE("/:id", middlewares.RequireAuthentication, projects_handlers.HardDelete)
+		projectsGroup.POST("/", middlewares.RequireAuthentication, projects_handlers.Create)
+		projectsGroup.GET("/", middlewares.RequireAuthentication, projects_handlers.FindAllByUserId)
+		projectsGroup.GET("/:id", middlewares.RequireAuthentication, projects_handlers.FindById)
+		projectsGroup.PUT("/:id", middlewares.RequireAuthentication, projects_handlers.Update)
+		projectsGroup.DELETE("/:id", middlewares.RequireAuthentication, projects_handlers.HardDelete)
 	}
 }

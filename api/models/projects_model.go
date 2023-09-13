@@ -1,12 +1,12 @@
 package models
 
-import "gorm.io/gorm"
+import "github.com/google/uuid"
 
 type Project struct {
-	gorm.Model
-	Name        string `gorm:"unique;column:name"`
-	Description string `gorm:"column:description"`
-	Tasks       []Task `gorm:"foreignKey:ProjectID"`
-	UserID      uint   `gorm:"column:user_id"`
-	User        User   `gorm:"foreignKey:UserID"`
+	BaseModel
+	Name        string    `gorm:"column:name"`
+	Description string    `gorm:"column:description"`
+	UserID      uuid.UUID `gorm:"type:uuid;column:user_id;not null;"`
+	User        User      `gorm:"foreignKey:UserID"`
+	Tasks       []Task    `gorm:"foreignKey:ID"`
 }

@@ -1,7 +1,9 @@
 package projects_responses
 
+import "github.com/google/uuid"
+
 type FindAllByUserIdResponse struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }

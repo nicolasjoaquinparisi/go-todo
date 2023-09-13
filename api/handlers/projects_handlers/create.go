@@ -42,7 +42,7 @@ func Create(c *gin.Context) {
 	// create project
 	_, err = projects_repository.Create(body.Name, body.Description, userId)
 	if err != nil {
-		c.JSON(http.StatusServiceUnavailable, gin.H{"description": "Failed to create user"})
+		c.JSON(http.StatusServiceUnavailable, gin.H{"description": "Failed to create project"})
 		return
 	}
 
