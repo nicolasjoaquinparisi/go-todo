@@ -15,7 +15,8 @@ import (
 func initialize() {
 	config.LoadDotEnv()
 
-	database.ConnectToDB()
+	dsn := os.Getenv("DATABASE_URL")
+	database.ConnectToDB(dsn)
 	database.Migrate()
 }
 
