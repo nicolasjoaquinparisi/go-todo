@@ -5,7 +5,7 @@ services:
     image: postgres:15
     container_name: postgres
     restart: always
-    env_file: .env
+    env_file: ../.env
     environment:
       POSTGRES_USER: ${TEST_DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${TEST_DATABASE_PASSWORD}
