@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go-todo/api/repositories/users_repository"
 	"go-todo/api/utils/requests/auth_requests"
+	"go-todo/api/utils/responses/auth_responses"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -54,12 +55,20 @@ func SignUp(c *gin.Context) {
 	// create user
 	fmt.Println("Auth Handler SignUp - Creating user")
 
-	_, err = users_repository.Create(body.Email, string(hash), body.FirstName, body.LastName)
+	user, err := users_repository.Create(body.Email, string(hash), body.FirstName, body.LastName)
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"description": "Failed to create user"})
 		return
 	}
 
+	// format response
+	userResponse := auth_responses.SignupHandlerResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+	}
+
 	// return response
-	c.JSON(http.StatusCreated, gin.H{"description": "User created"})
+	c.JSON(http.StatusCreated, gin.H{"user": userResponse})
 }
