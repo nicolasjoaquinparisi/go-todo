@@ -6,7 +6,6 @@
 *.test
 *.prof
 *.out
-/_test/
 /vendor/
 /Godeps/
 /_obj/
