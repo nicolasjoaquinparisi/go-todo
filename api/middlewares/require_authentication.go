@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"go-todo/api/models"
-	"go-todo/database"
+	"github.com/google/uuid"
+	"go-todo/api/repositories/users_repository"
 	"net/http"
 	"os"
 	"strings"
@@ -13,6 +13,8 @@ import (
 )
 
 func RequireAuthentication(c *gin.Context) {
+	fmt.Println("Invoked: Middleware Authentication")
+
 	headerAuthorization := c.GetHeader("Authorization")
 
 	// validate if Authorization header is present in the request
@@ -33,7 +35,7 @@ func RequireAuthentication(c *gin.Context) {
 	// decode jwt
 	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
 		return []byte(os.Getenv("JWT_SECRET")), nil
@@ -43,11 +45,20 @@ func RequireAuthentication(c *gin.Context) {
 		// check exp
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.JSON(http.StatusUnauthorized, gin.H{"description": "Token expired"})
+			c.Abort()
+			return
 		}
 
 		// find user with token sub
-		var user models.User
-		database.Instance.First(&user, claims["sub"])
+		subClaim, _ := claims["sub"].(string)
+		userId, _ := uuid.Parse(subClaim)
+		user, _ := users_repository.FindById(userId)
+
+		if user == nil {
+			c.JSON(http.StatusForbidden, gin.H{"description": "Forbidden"})
+			c.Abort()
+			return
+		}
 
 		// attach user to request
 		c.Set("user", user)

@@ -8,5 +8,5 @@ type Project struct {
 	Description string    `gorm:"column:description"`
 	UserID      uuid.UUID `gorm:"type:uuid;column:user_id;not null;"`
 	User        User      `gorm:"foreignKey:UserID"`
-	Tasks       []Task    `gorm:"foreignKey:ID"`
+	Tasks       []Task
 }

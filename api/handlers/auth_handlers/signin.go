@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"go-todo/api/repositories/users_repository"
 	"go-todo/api/utils/requests/auth_requests"
+	"go-todo/api/utils/responses/auth_responses"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
@@ -57,6 +58,14 @@ func SignIn(c *gin.Context) {
 		return
 	}
 
+	// format response
+	userResponse := auth_responses.SignInResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+	}
+
 	// return response
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+	c.JSON(http.StatusOK, gin.H{"user": userResponse, "token": tokenString})
 }

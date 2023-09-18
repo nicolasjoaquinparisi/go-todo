@@ -11,9 +11,10 @@ func Me(c *gin.Context) {
 	user, _ := c.Get("user")
 
 	userResponse := users_responses.MeHandlerResponse{
-		Email:     user.(models.User).Email,
-		FirstName: user.(models.User).FirstName,
-		LastName:  user.(models.User).LastName,
+		ID:        user.(*models.User).ID,
+		Email:     user.(*models.User).Email,
+		FirstName: user.(*models.User).FirstName,
+		LastName:  user.(*models.User).LastName,
 	}
 
 	c.JSON(http.StatusOK, gin.H{"user": userResponse})

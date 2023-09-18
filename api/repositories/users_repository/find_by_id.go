@@ -2,16 +2,17 @@ package users_repository
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"go-todo/api/models"
 	"go-todo/database"
 )
 
-func FindByEmail(email string) (*models.User, error) {
-	fmt.Println("Invoked: Users repository FindByEmail")
+func FindById(id uuid.UUID) (*models.User, error) {
+	fmt.Println("Invoked - Users repository FindById")
 
 	var user *models.User
 
-	result := database.Instance.First(&user, "email = ?", email)
+	result := database.Instance.First(&user, "id = ?", id)
 
 	// return query error
 	if result.Error != nil {

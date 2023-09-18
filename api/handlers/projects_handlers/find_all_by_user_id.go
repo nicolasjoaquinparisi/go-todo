@@ -10,7 +10,7 @@ import (
 
 func FindAllByUserId(c *gin.Context) {
 	user, _ := c.Get("user")
-	userId := user.(models.User).ID
+	userId := user.(*models.User).ID
 
 	result, err := projects_repository.FindAllByUserId(userId)
 	if err != nil {
